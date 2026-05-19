@@ -18,7 +18,7 @@ DB_CONFIG = {
 TMDB_CONFIG = {
     "api_key": os.getenv("TMDB_API_KEY", ""),
     "base_url": "https://api.themoviedb.org/3",
-    "language": "fr-FR"
+    "language": "en-US"
 }
 
 PIPELINE_CONFIG = {
