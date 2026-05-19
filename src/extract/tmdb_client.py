@@ -74,3 +74,35 @@ class TMDBClient:
             logger.info(f"Fetched {len(result)} upcoming movies from page {page}")
             return result
         return []
+    def fetch_genre(self) -> Optional[Dict]:
+        params = {
+            "language": self.language
+        }
+        data = self._make_request("genre/movie/list", params)
+        if data: 
+            result = data.get("genres", [])
+            logger.info(f"Fetched {len(result)} genres")
+            return result
+        return []
+    def fetch_movie_details(self, movie_id: int) -> Optional[Dict]:
+        params = {
+            "language": self.language
+        }
+        data = self._make_request(f"movie/{movie_id}", params)
+        if data: 
+            logger.info(f"Fetched details for movie ID {movie_id}")
+            return data
+        return None
+    def search_movies(self, query: str, page: int = 1) -> Optional[Dict]:
+        params = {
+            "language": self.language,
+            "query": query,
+            "page": page,
+            "include_adult": True
+        }
+        data = self._make_request("search/movie", params)
+        if data: 
+            result = data.get("results", [])
+            logger.info(f"Fetched {len(result)} search results for query '{query}' on page {page}")
+            return result
+        return []
