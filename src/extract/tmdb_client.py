@@ -52,3 +52,25 @@ class TMDBClient:
             logger.info(f"Fetched {len(result)} top rated movies from page {page}")
             return result
         return []
+    def fetch_movie_playing_now(self, page: int = 1) -> Optional[Dict]:
+        params = {
+            "language": self.language,
+            "page": page
+        }
+        data = self._make_request("movie/now_playing", params)
+        if data: 
+            result = data.get("results", [])
+            logger.info(f"Fetched {len(result)} movies playing now from page {page}")
+            return result
+        return []
+    def fetch_upcoming_movies(self, page: int = 1) -> Optional[Dict]:
+        params = {
+            "language": self.language,
+            "page": page
+        }
+        data = self._make_request("movie/upcoming", params)
+        if data: 
+            result = data.get("results", [])
+            logger.info(f"Fetched {len(result)} upcoming movies from page {page}")
+            return result
+        return []
