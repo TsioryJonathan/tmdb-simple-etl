@@ -1,4 +1,4 @@
-from src.extract.tmdb_client import TMDBClient
+from src.extractors.tmdb_client import TMDBClient
 
 def test_tmdb_request():
     client = TMDBClient()
