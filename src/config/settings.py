@@ -10,7 +10,7 @@ load_dotenv(ROOT_DIR / ".env")
 DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "port": int(os.getenv("DB_PORT", 5432)),
-    "database": os.getenv("DB_NAME", "tmdb_movies"),
+    "dbname": os.getenv("DB_NAME", "tmdb_movies"),
     "user": os.getenv("DB_USER", "postgres"),
     "password": os.getenv("DB_PASSWORD", "")
 }

@@ -20,8 +20,9 @@ class DatabaseConnection:
     def connect(self):
         """Establish database connection"""
         try:
+            print(f"Connecting to {self.config['dbname']} at {self.config['host']}:{self.config['port']} as {self.config['user']}")
             self.conn = psycopg.connect(**self.config)
-            logger.info(f"Connected to {self.config['database']}")
+            logger.info(f"Connected to {self.config['dbname']}")
             return self.conn
         except Exception as e:
             logger.error(f"Connection failed: {e}")
