@@ -3,7 +3,6 @@ import logging
 from src.config.settings import TMDB_CONFIG
 from typing import List, Dict, Optional
 
-
 logger = logging.getLogger(__name__)
 
 class TMDBClient:
@@ -20,7 +19,7 @@ class TMDBClient:
             "Content-Type": "application/json;charset=utf-8"
         }
 
-    def _make_request(self,endpoint: str,params: Optional[Dict] = None) -> Optional[Dict]:
+    def _make_request(self, endpoint: str, params: Optional[Dict] = None) -> Optional[Dict]:
         url = f"{self.base_url}/{endpoint}"
         try:
             response = self.session.get(url, params=params)
@@ -30,70 +29,72 @@ class TMDBClient:
             logger.error(f"Request failed: endpoint={endpoint}, params={params}, error={e}")
             return None
 
-    def fetch_popular_movies(self,page:int = 1) -> Optional[Dict]:
+    def fetch_popular_movies(self, page: int = 1) -> List[Dict]:
+        """Fetch popular movies - returns list of movies"""
         params = {
             "language": self.language,
             "page": page
         }
         data = self._make_request("movie/popular", params)
-        if data: 
-            result = data.get("results", [])
-            logger.info(f"Fetched {len(result)} popular movies from page {page}")
-            return result
+        if data:
+            results = data.get("results", [])
+            logger.info(f"Fetched {len(results)} popular movies from page {page}")
+            return results
         return []
-    def fetch_top_rated_movies(self, page:int = 1) -> Optional[Dict]:
+
+    def fetch_top_rated_movies(self, page: int = 1) -> List[Dict]:
+        """Fetch top rated movies - returns list of movies"""
         params = {
             "language": self.language,
             "page": page
         }
         data = self._make_request("movie/top_rated", params)
-        if data: 
-            result = data.get("results", [])
-            logger.info(f"Fetched {len(result)} top rated movies from page {page}")
-            return result
+        if data:
+            results = data.get("results", [])
+            logger.info(f"Fetched {len(results)} top rated movies from page {page}")
+            return results
         return []
-    def fetch_movie_playing_now(self, page: int = 1) -> Optional[Dict]:
+
+    def fetch_movies_now_playing(self, page: int = 1) -> List[Dict]:
+        """Fetch movies currently in theaters - returns list of movies"""
         params = {
             "language": self.language,
             "page": page
         }
         data = self._make_request("movie/now_playing", params)
-        if data: 
-            result = data.get("results", [])
-            logger.info(f"Fetched {len(result)} movies playing now from page {page}")
-            return result
+        if data:
+            results = data.get("results", [])
+            logger.info(f"Fetched {len(results)} movies now playing from page {page}")
+            return results
         return []
-    def fetch_upcoming_movies(self, page: int = 1) -> Optional[Dict]:
+
+    def fetch_upcoming_movies(self, page: int = 1) -> List[Dict]:
+        """Fetch upcoming movies - returns list of movies"""
         params = {
             "language": self.language,
             "page": page
         }
         data = self._make_request("movie/upcoming", params)
-        if data: 
-            result = data.get("results", [])
-            logger.info(f"Fetched {len(result)} upcoming movies from page {page}")
-            return result
+        if data:
+            results = data.get("results", [])
+            logger.info(f"Fetched {len(results)} upcoming movies from page {page}")
+            return results
         return []
-    def fetch_genre(self) -> Optional[Dict]:
+
+    def fetch_genres(self) -> List[Dict]:
+        """Fetch list of genres - returns list of genres"""
         params = {
             "language": self.language
         }
         data = self._make_request("genre/movie/list", params)
-        if data: 
-            result = data.get("genres", [])
-            logger.info(f"Fetched {len(result)} genres")
-            return result
+        if data:
+            results = data.get("genres", [])
+            logger.info(f"Fetched {len(results)} genres")
+            return results
         return []
-    def fetch_movie_details(self, movie_id: int) -> Optional[Dict]:
-        params = {
-            "language": self.language
-        }
-        data = self._make_request(f"movie/{movie_id}", params)
-        if data: 
-            logger.info(f"Fetched details for movie ID {movie_id}")
-            return data
-        return None
-    def search_movies(self, query: str, page: int = 1) -> Optional[Dict]:
+
+    def search_movies(self, query: str, page: int = 1) -> List[Dict]:
+        """Search movies by keyword - returns list of movies"""
         params = {
             "language": self.language,
             "query": query,
@@ -101,8 +102,24 @@ class TMDBClient:
             "include_adult": True
         }
         data = self._make_request("search/movie", params)
-        if data: 
-            result = data.get("results", [])
-            logger.info(f"Fetched {len(result)} search results for query '{query}' on page {page}")
-            return result
+        if data:
+            results = data.get("results", [])
+            logger.info(f"Fetched {len(results)} search results for query '{query}' on page {page}")
+            return results
         return []
+
+    def fetch_movie_details(self, movie_id: int) -> Optional[Dict]:
+        """Fetch details for a specific movie - returns dict or None"""
+        params = {
+            "language": self.language
+        }
+        data = self._make_request(f"movie/{movie_id}", params)
+        if data:
+            logger.info(f"Fetched details for movie ID {movie_id}")
+            return data
+        return None
+
+    def close(self):
+        """Close HTTP session"""
+        self.session.close()
+        logger.info("TMDB client session closed")
